@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应急信息审批 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>应急信息审批</h1>
+    <p>审批平台管理人员提交的旅游应急信息</p>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(infos)}">
+    <table class="table">
+      <thead>
+        <tr><th>标题</th><th>分类</th><th>发布人</th><th>状态</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="info : ${infos}">
+          <td th:text="${info.title}">标题</td>
+          <td class="muted" th:text="${info.category}">分类</td>
+          <td class="muted" th:text="${info.publisher.name} ?: ${info.publisher.username}">发布人</td>
+          <td th:replace="~{fragments/badges :: emergencyStatus(${info.status})}"></td>
+          <td><a class="btn sm" th:href="@{'/emergency/' + ${info.id} + '/approve'}">审批</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(infos)}">当前没有待审批的应急信息。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

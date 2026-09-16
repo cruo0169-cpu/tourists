@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>旅游线路 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>旅游线路</h1>
+    <p>查询景区推荐旅游线路信息</p>
+  </div>
+
+  <form class="search" th:action="@{/routes}" method="get" style="margin-bottom:18px;">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="输入线路名称、景点或简介">
+    <button class="btn" type="submit">查询</button>
+  </form>
+
+  <div class="grid grid-2" th:if="${!#lists.isEmpty(items)}">
+    <div class="card card-pad" th:each="r : ${items}">
+      <h2 style="margin:0 0 6px;font-size:18px;" th:text="${r.name}">线路</h2>
+      <div class="muted" style="margin-bottom:8px;"
+           th:text="'时长：' + ${r.duration} + ' · 价格：¥' + ${r.price}">信息</div>
+      <div style="margin-bottom:10px;">
+        <span class="tag" th:each="s : ${#strings.listSplit(r.spots, ',')}" th:text="${s}">景点</span>
+      </div>
+      <p style="margin:0 0 14px;color:#374151;" th:text="${r.description}">描述</p>
+      <a class="btn sm" th:href="@{'/route/' + ${r.id}}">查看详情</a>
+      <a class="btn ghost sm" th:href="@{/spots}" style="margin-left:6px;">查看景点</a>
+    </div>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(items)}">没有找到相关线路。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

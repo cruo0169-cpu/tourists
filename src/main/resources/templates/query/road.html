@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>路况信息 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>路况信息</h1>
+    <p>查询景区道路实时路况信息</p>
+  </div>
+
+  <form class="search" th:action="@{/road}" method="get" style="margin-bottom:18px;">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="输入道路名称或路段">
+    <button class="btn" type="submit">查询</button>
+  </form>
+
+  <div class="card" th:if="${!#lists.isEmpty(items)}">
+    <table class="table">
+      <thead>
+        <tr><th>道路名称</th><th>路段</th><th>路况</th><th>说明</th><th>更新时间</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="r : ${items}">
+          <td th:text="${r.roadName}">道路</td>
+          <td class="muted" th:text="${r.section}">路段</td>
+          <td th:replace="~{fragments/badges :: roadStatus(${r.status})}"></td>
+          <td th:text="${r.description}">说明</td>
+          <td class="muted" th:text="${#temporals.format(r.updatedAt,'MM-dd HH:mm')}">时间</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(items)}">没有找到相关路况信息。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>旅游应急信息 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>旅游应急信息</h1>
+    <p>查询景区发布的各类应急与安全提示，帮助您安排行程</p>
+  </div>
+
+  <form class="search" th:action="@{/emergency}" method="get" style="margin-bottom:18px;">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="输入标题或内容关键词">
+    <button class="btn" type="submit">查询</button>
+  </form>
+
+  <div class="grid" th:if="${!#lists.isEmpty(infos)}">
+    <div class="card card-pad" th:each="info : ${infos}">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+        <h2 style="margin:0 0 8px;font-size:18px;" th:text="${info.title}">标题</h2>
+        <span class="tag" th:if="${info.category != null}" th:text="${info.category}">分类</span>
+      </div>
+      <p style="margin:0 0 12px;color:#374151;white-space:pre-wrap;" th:text="${info.content}">内容</p>
+      <div class="muted" style="font-size:13px;">
+        有效期：<span th:text="${#temporals.format(info.validFrom,'yyyy-MM-dd')}">起</span>
+        ~ <span th:text="${#temporals.format(info.validTo,'yyyy-MM-dd')}">止</span>
+        · 发布时间：<span th:text="${#temporals.format(info.publishedAt,'yyyy-MM-dd HH:mm')}">时间</span>
+      </div>
+    </div>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(infos)}">暂时没有可查询的应急信息。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

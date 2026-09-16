@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>编辑房型 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${room.hotel.name} + ' · 编辑房型'">编辑房型</h1>
+    <p>更新房间实时预订信息</p>
+  </div>
+
+  <div class="card card-pad" style="max-width:640px;">
+    <form th:action="@{'/room/' + ${room.id} + '/edit'}" method="post">
+      <div class="field">
+        <label class="label">房型名称 *</label>
+        <input type="text" name="roomType" th:value="${room.roomType}" required>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="label">价格（元） *</label>
+          <input type="number" name="price" step="0.01" th:value="${room.price}" required>
+        </div>
+        <div class="field">
+          <label class="label">总房间数 *</label>
+          <input type="number" name="totalRooms" min="0" th:value="${room.totalRooms}" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">剩余可订数 *</label>
+        <input type="number" name="availableRooms" min="0" th:value="${room.availableRooms}" required>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">保存修改</button>
+        <a class="btn ghost" th:href="@{'/hotel/' + ${room.hotel.id} + '/rooms'}">返回</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

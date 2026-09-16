@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>应急信息管理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>应急信息管理</h1>
+    <p>发布、修改、删除、查询旅游应急信息</p>
+    <a class="btn" th:href="@{/emergency/new}">+ 发布信息</a>
+  </div>
+
+  <form class="search" th:action="@{/emergency/manage}" method="get" style="margin-bottom:18px;">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="输入标题或内容关键字">
+    <button class="btn" type="submit">查询</button>
+  </form>
+
+  <div class="card" th:if="${!#lists.isEmpty(infos)}">
+    <table class="table">
+      <thead>
+        <tr><th>标题</th><th>分类</th><th>有效期</th><th>状态</th><th>发布时间</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="info : ${infos}">
+          <td th:text="${info.title}">标题</td>
+          <td class="muted" th:text="${info.category}">分类</td>
+          <td class="muted">
+            <span th:text="${#temporals.format(info.validFrom,'MM-dd')}"></span>~
+            <span th:text="${#temporals.format(info.validTo,'MM-dd')}"></span>
+          </td>
+          <td th:replace="~{fragments/badges :: emergencyStatus(${info.status})}"></td>
+          <td class="muted" th:text="${info.publishedAt != null ? #temporals.format(info.publishedAt,'yyyy-MM-dd HH:mm') : '—'}">时间</td>
+          <td>
+            <a class="btn ghost sm" th:if="${info.status.name() == 'PENDING_APPROVAL' || info.status.name() == 'REJECTED' || info.status.name() == 'PUBLISHED'}"
+               th:href="@{'/emergency/' + ${info.id} + '/edit'}">编辑</a>
+            <form th:action="@{'/emergency/' + ${info.id} + '/delete'}" method="post" class="js-confirm" data-confirm="确认删除该条应急信息吗？" style="display:inline-block;">
+              <button class="btn danger sm">删除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(infos)}">暂无符合条件的信息。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

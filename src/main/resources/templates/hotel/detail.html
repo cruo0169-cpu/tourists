@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${hotel.name}">酒店详情 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${hotel.name}">酒店</h1>
+    <div>
+      <span class="tag" th:text="${hotel.hotelType.label}">类型</span>
+      <span class="tag" th:if="${hotel.starLevel != null}" th:text="${hotel.starLevel} + ' 星'">星级</span>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div>
+      <div class="card card-pad" style="margin-bottom:16px;">
+        <div class="field" style="margin-top:0;">
+          <label class="label">酒店简介</label>
+          <p style="margin:0;" th:text="${hotel.description}">描述</p>
+        </div>
+        <div class="field">
+          <label class="label">联系信息</label>
+          <p style="margin:0;" class="muted" th:text="'地址：' + ${hotel.address}">地址</p>
+          <p style="margin:2px 0 0;" class="muted" th:text="'电话：' + ${hotel.phone}">电话</p>
+        </div>
+      </div>
+
+      <div class="card card-pad" th:if="${!#lists.isEmpty(marketings)}">
+        <label class="label">营销推荐</label>
+        <div th:each="m : ${marketings}" style="padding:10px 0;border-bottom:1px solid var(--line);">
+          <div class="muted" style="font-size:13px;" th:text="'导流情况：' + ${m.trafficNote}">导流</div>
+          <p style="margin:6px 0 0;" th:text="${m.content}">内容</p>
+        </div>
+      </div>
+
+      <div class="card card-pad" th:if="${user != null && user.role.name() == 'PLATFORM_ADMIN'}">
+        <label class="label">录入营销信息</label>
+        <form th:action="@{'/hotel/' + ${hotel.id} + '/marketing'}" method="post">
+          <div class="field">
+            <input type="text" name="trafficNote" placeholder="导流情况说明">
+          </div>
+          <div class="field">
+            <textarea name="content" required placeholder="营销内容"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn" type="submit">提交营销</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-pad" style="padding-bottom:8px;"><label class="label">房型预订情况</label></div>
+        <table class="table">
+          <thead>
+            <tr><th>房型</th><th>价格</th><th>可订</th><th>更新时间</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="r : ${rooms}">
+              <td th:text="${r.roomType}">房型</td>
+              <td th:text="'¥' + ${r.price}">价格</td>
+              <td>
+                <span class="badge" th:classappend="${r.availableRooms > 0 ? 'green' : 'red'}"
+                      th:text="${r.availableRooms} + ' 间'">可订</span>
+              </td>
+              <td class="muted" th:text="${#temporals.format(r.updatedAt,'MM-dd HH:mm')}">时间</td>
+              <td>
+                <a class="btn sm" th:if="${r.availableRooms != null && r.availableRooms > 0}"
+                   th:href="@{'/room/' + ${r.id} + '/booking/new'}">选择入住</a>
+                <span class="muted" th:if="${r.availableRooms == null || r.availableRooms <= 0}">满房</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="empty" th:if="${#lists.isEmpty(rooms)}" style="border:none;background:none;">暂无房型信息。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${c.title}">投诉详情 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${c.title}">投诉标题</h1>
+    <div>
+      <span th:replace="~{fragments/badges :: complaintStatus(${c})}"></span>
+      <a class="btn ghost sm" th:href="@{'/complaint/' + ${c.id}}" style="display:none;"></a>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div>
+      <div class="card card-pad" style="margin-bottom:16px;">
+        <div class="field" style="margin-top:0;">
+          <label class="label">投诉内容</label>
+          <p style="margin:0;white-space:pre-wrap;" th:text="${c.content}">内容</p>
+        </div>
+        <div class="field">
+          <label class="label">提交信息</label>
+          <p style="margin:0;" class="muted">
+            游客：<span th:text="${c.tourist.name} ?: ${c.tourist.username}">游客</span>
+            · 提交时间：<span th:text="${#temporals.format(c.createdAt,'yyyy-MM-dd HH:mm')}">时间</span>
+          </p>
+        </div>
+        <div class="field" th:if="${c.images != null}">
+          <label class="label">现场照片</label>
+          <a th:href="@{'/uploads/' + ${c.images}}" target="_blank">
+            <img class="image-preview" th:src="@{'/uploads/' + ${c.images}}" alt="现场照片">
+          </a>
+        </div>
+        <div class="field" th:if="${c.video != null}">
+          <label class="label">视频附件</label>
+          <a class="btn ghost sm" th:href="@{'/uploads/' + ${c.video}}" target="_blank">查看视频</a>
+        </div>
+      </div>
+
+      <div class="card card-pad">
+        <label class="label">处理进度</label>
+        <div class="timeline">
+          <div class="item">
+            <div class="dot"></div>
+            <div class="body">
+              <h3>游客提交投诉</h3>
+              <p th:text="${#temporals.format(c.createdAt,'yyyy-MM-dd HH:mm')}">时间</p>
+            </div>
+          </div>
+          <div class="item" th:if="${c.approver != null}">
+            <div class="dot"></div>
+            <div class="body">
+              <h3>平台审批</h3>
+              <p>
+                <span th:text="${c.status.name() == 'REJECTED' ? '审批驳回' : '审批通过'}">状态</span>
+                <span th:if="${c.approveRemark != null}" th:text="'｜备注：' + ${c.approveRemark}"></span>
+              </p>
+            </div>
+          </div>
+          <div class="item" th:if="${handling != null}">
+            <div class="dot"></div>
+            <div class="body">
+              <h3>处理人员处理</h3>
+              <p th:text="${handling.handleOpinion}">意见</p>
+              <p th:text="${handling.handleResult}">结果</p>
+              <p th:if="${handling.images != null}" class="muted">
+                附件：
+                <a th:href="@{'/uploads/' + ${handling.images}}" target="_blank">处理照片</a>
+              </p>
+            </div>
+          </div>
+          <div class="item" th:if="${feedback != null}">
+            <div class="dot"></div>
+            <div class="body">
+              <h3>游客反馈 · <span th:text="${feedback.rating} + ' 分'">评分</span></h3>
+              <p th:text="${feedback.feedback}">反馈</p>
+            </div>
+          </div>
+          <div class="item" th:if="${c.status.name() == 'CLOSED'}">
+            <div class="dot"></div>
+            <div class="body">
+              <h3>已结案</h3>
+              <p>该投诉已完成结案处理。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card card-pad" th:if="${canRate}">
+        <label class="label">评价处理结果并确认</label>
+        <form th:action="@{'/complaint/' + ${c.id} + '/rate'}" method="post" class="js-confirm" data-confirm="确认对处理结果进行评价吗？">
+          <div class="field">
+            <label class="label">满意度评分</label>
+            <select name="rating">
+              <option value="5">5 分 · 非常满意</option>
+              <option value="4">4 分 · 满意</option>
+              <option value="3">3 分 · 一般</option>
+              <option value="2">2 分 · 不满意</option>
+              <option value="1">1 分 · 非常不满意</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label">反馈意见</label>
+            <textarea name="feedback" placeholder="请留下您的意见"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn" type="submit">提交评价</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card card-pad" th:if="${owner && c.status.name() != 'CLOSED' && c.status.name() != 'REJECTED'}">
+        <label class="label">回复/补充说明</label>
+        <form th:action="@{'/complaint/' + ${c.id} + '/reply'}" method="post">
+          <div class="field">
+            <textarea name="content" required placeholder="补充说明投诉情况"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" type="submit">提交回复</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card card-pad" th:if="${user != null && user.role.name() == 'PLATFORM_ADMIN' && c.status.name() == 'PENDING_APPROVAL'}">
+        <label class="label">管理操作</label>
+        <div class="actions" style="margin-top:8px;">
+          <a class="btn" th:href="@{'/complaint/' + ${c.id} + '/approve'}">去审批</a>
+        </div>
+      </div>
+      <div class="card card-pad" th:if="${user != null && user.role.name() == 'PLATFORM_ADMIN' && c.status.name() == 'CONFIRMED'}">
+        <label class="label">管理操作</label>
+        <form th:action="@{'/complaint/' + ${c.id} + '/close'}" method="post" class="js-confirm" data-confirm="确认对该投诉结案吗？">
+          <div class="actions" style="margin-top:8px;">
+            <button class="btn warn" type="submit">结案</button>
+          </div>
+        </form>
+      </div>
+      <div class="card card-pad" th:if="${user != null && user.role.name() == 'COMPLAINT_HANDLER' && c.status.name() == 'IN_HANDLING'}">
+        <label class="label">处理操作</label>
+        <div class="actions" style="margin-top:8px;">
+          <a class="btn" th:href="@{'/complaint/' + ${c.id} + '/handle'}">去处理</a>
+        </div>
+      </div>
+
+      <div class="card card-pad">
+        <label class="label">往来记录</label>
+        <div th:if="${#lists.isEmpty(replies)}" class="muted" style="color:#98a2b3;">暂无回复记录。</div>
+        <div th:each="r : ${replies}">
+          <div style="padding:10px 0;border-bottom:1px solid var(--line);">
+            <strong th:text="${r.user.name} ?: ${r.user.username}">用户</strong>
+            <span class="muted" style="font-size:12px;margin-left:8px;"
+              th:text="${#temporals.format(r.createdAt,'yyyy-MM-dd HH:mm')}">时间</span>
+            <p style="margin:6px 0 0;white-space:pre-wrap;" th:text="${r.content}">内容</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

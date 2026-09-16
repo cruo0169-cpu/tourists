@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>咨询回复 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>咨询回复</h1>
+    <p th:text="${c.title}">标题</p>
+  </div>
+
+  <div class="card card-pad" style="max-width:720px;">
+    <div class="alert info" style="font-size:14px;">
+      <strong>游客咨询：</strong><span th:text="${c.content}" style="white-space:pre-wrap;"></span>
+    </div>
+
+    <form th:action="@{'/consultation/' + ${c.id} + '/reply'}" method="post">
+      <div class="field">
+        <label class="label">答复内容 *</label>
+        <textarea name="answer" required th:text="${c.answer}"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">提交答复</button>
+        <a class="btn ghost" th:href="@{/consultation/manage}">返回</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

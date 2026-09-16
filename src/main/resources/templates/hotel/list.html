@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>酒店查询 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${type.name() == 'STAR' ? '星级酒店查询' : (type.name() == 'NON_STAR' ? '非星级酒店查询' : '乡村旅游酒店查询')}">酒店查询</h1>
+    <p>查询酒店信息与房间预订情况，选择入住酒店</p>
+  </div>
+
+  <form class="search" th:action="@{'/hotel/' + ${type.name().toLowerCase()}}" method="get" style="margin-bottom:18px;">
+    <input type="text" name="name" th:value="${keyword}" placeholder="输入酒店名称">
+    <button class="btn" type="submit">查询</button>
+  </form>
+
+  <div class="grid grid-3" th:if="${!#lists.isEmpty(hotels)}">
+    <div class="card card-pad" th:each="h : ${hotels}">
+      <div class="tag" th:text="${h.hotelType.label}">类型</div>
+      <span class="tag" th:if="${h.starLevel != null}" th:text="${h.starLevel} + ' 星'">星级</span>
+      <h2 style="margin:10px 0 6px;font-size:18px;" th:text="${h.name}">酒店</h2>
+      <div class="muted" th:text="${h.address}">地址</div>
+      <div class="muted" style="margin:6px 0 14px;" th:text="${h.phone}">电话</div>
+      <p style="margin:0 0 14px;color:#374151;" th:text="${h.description}">描述</p>
+      <a class="btn" th:href="@{'/hotel/' + ${h.id}}">查看房间</a>
+    </div>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(hotels)}">没有找到符合条件的酒店。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

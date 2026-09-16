@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>投诉审批 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>投诉审批</h1>
+    <p th:text="${c.title}">标题</p>
+  </div>
+
+  <div class="card card-pad" style="max-width:760px;">
+    <div class="alert info" style="font-size:14px;">
+      <strong>投诉内容：</strong><span th:text="${c.content}" style="white-space:pre-wrap;"></span>
+    </div>
+
+    <form th:action="@{'/complaint/' + ${c.id} + '/approve'}" method="post">
+      <div class="field">
+        <label class="label">分派投诉处理人员</label>
+        <select name="handlerId" required>
+          <option value="">请选择处理人员</option>
+          <option th:each="h : ${handlers}" th:value="${h.id}"
+                  th:text="${h.name} ?: ${h.username}">处理人员</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label">审批备注</label>
+        <input type="text" name="remark" placeholder="填写审批意见">
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit" value="approve" name="action">审批通过并分派</button>
+      </div>
+    </form>
+
+    <form th:action="@{'/complaint/' + ${c.id} + '/reject'}" method="post" class="js-confirm" data-confirm="确认驳回该投诉吗？">
+      <div class="field" style="margin-top:16px;">
+        <label class="label">驳回原因</label>
+        <input type="text" name="remark" placeholder="填写驳回原因">
+      </div>
+      <div class="actions">
+        <button class="btn danger" type="submit">驳回</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

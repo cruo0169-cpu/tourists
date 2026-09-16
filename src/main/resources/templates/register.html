@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>注册 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card">
+    <h2>注册</h2>
+    <div class="sub">填写基本信息</div>
+
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+    <form th:action="@{/register}" method="post">
+      <div class="field">
+        <label class="label">用户名 *</label>
+        <input type="text" name="username" th:value="${username}" placeholder="用户名" required>
+      </div>
+      <div class="field">
+        <label class="label">密码 *</label>
+        <input type="password" name="password" placeholder="密码" required>
+      </div>
+      <div class="field">
+        <label class="label">姓名</label>
+        <input type="text" name="name" th:value="${name}" placeholder="姓名">
+      </div>
+      <div class="field">
+        <label class="label">联系电话</label>
+        <input type="text" name="phone" th:value="${phone}" placeholder="联系电话">
+      </div>
+      <div class="actions" style="margin-top:20px;">
+        <button class="btn" type="submit" style="width:100%;justify-content:center;">注册</button>
+      </div>
+    </form>
+    <div class="link-row" style="justify-content:center;">
+      <span style="margin-right:6px;">已有账号？</span>
+      <a th:href="@{/login}">登录</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

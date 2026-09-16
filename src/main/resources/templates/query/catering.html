@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>餐饮娱乐 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>餐饮娱乐</h1>
+    <p>查询景区内餐饮与娱乐场所信息</p>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+    <a class="btn sm" th:classappend="${type == null ? '' : ' ghost'}" th:href="@{/catering}">全部</a>
+    <a class="btn sm" th:classappend="${type != null && type.name() == 'DINING' ? '' : ' ghost'}" th:href="@{/catering(type='DINING')}">餐饮</a>
+    <a class="btn sm" th:classappend="${type != null && type.name() == 'ENTERTAINMENT' ? '' : ' ghost'}" th:href="@{/catering(type='ENTERTAINMENT')}">娱乐</a>
+  </div>
+
+  <form class="search" th:action="@{/catering(type=${type})}" method="get" style="margin-bottom:18px;">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="输入名称或描述">
+    <button class="btn" type="submit">查询</button>
+  </form>
+
+  <div class="grid grid-3" th:if="${!#lists.isEmpty(items)}">
+    <div class="card card-pad" th:each="c : ${items}">
+      <div class="tag" th:text="${c.type.label}">类型</div>
+      <h2 style="margin:10px 0 6px;font-size:18px;" th:text="${c.name}">名称</h2>
+      <div class="muted" th:text="'地址：' + ${c.address}">地址</div>
+      <div class="muted" th:text="'电话：' + ${c.phone}">电话</div>
+      <p style="margin:10px 0;" th:text="'人均：¥' + ${c.avgPrice}">人均</p>
+      <p style="margin:0;color:#374151;" th:text="${c.description}">描述</p>
+    </div>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(items)}">没有找到相关场所。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

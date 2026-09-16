@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<span th:fragment="complaintStatus(c)"
+      class="badge"
+      th:classappend="${c.status.name() == 'PENDING_APPROVAL'} ? 'amber'
+        : (${c.status.name() == 'IN_HANDLING'} ? 'blue'
+        : (${c.status.name() == 'HANDLED'} ? 'teal'
+        : (${c.status.name() == 'REJECTED'} ? 'red' : 'green')))"
+      th:text="${c.status.label}">状态</span>
+
+<span th:fragment="emergencyStatus(s)"
+      class="badge"
+      th:classappend="${s.name() == 'PENDING_APPROVAL'} ? 'amber'
+        : (${s.name() == 'REJECTED'} ? 'red'
+        : (${s.name() == 'EXPIRED'} ? 'gray' : 'green'))"
+      th:text="${s.label}">状态</span>
+
+<span th:fragment="roadStatus(s)"
+      class="badge"
+      th:classappend="${s.name() == 'CONGESTED'} ? 'red'
+        : (${s.name() == 'CONTROLLED'} ? 'amber'
+        : (${s.name() == 'SLOW'} ? 'blue' : 'green'))"
+      th:text="${s.label}">路况</span>
+
+</body>
+</html>

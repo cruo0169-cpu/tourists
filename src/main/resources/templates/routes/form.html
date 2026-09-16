@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${route.id != null ? '编辑线路' : '新增线路'}">线路表单</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${route.id != null ? '编辑线路' : '新增线路'}">标题</h1>
+  </div>
+
+  <div class="card card-pad" style="max-width:720px;">
+    <form th:if="${route.id == null}" th:action="@{/routes/new}" method="post">
+      <div class="field">
+        <label class="label">线路名称 *</label>
+        <input type="text" name="name" required placeholder="线路名称">
+      </div>
+      <div class="field">
+        <label class="label">途径景点 *</label>
+        <input type="text" name="spots" required placeholder="多个景点用英文逗号分隔，如：云顶日出,古刹禅寺">
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="label">时长 *</label>
+          <input type="text" name="duration" required placeholder="如：约8小时">
+        </div>
+        <div class="field">
+          <label class="label">价格（元） *</label>
+          <input type="number" name="price" step="0.01" required placeholder="0.00">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">线路简介 *</label>
+        <textarea name="description" required placeholder="线路简介"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">保存</button>
+        <a class="btn ghost" th:href="@{/routes/manage}">返回</a>
+      </div>
+    </form>
+
+    <form th:if="${route.id != null}" th:action="@{'/routes/' + ${route.id} + '/edit'}" method="post">
+      <div class="field">
+        <label class="label">线路名称 *</label>
+        <input type="text" name="name" th:value="${route.name}" required>
+      </div>
+      <div class="field">
+        <label class="label">途径景点 *</label>
+        <input type="text" name="spots" th:value="${route.spots}" required>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="label">时长 *</label>
+          <input type="text" name="duration" th:value="${route.duration}" required>
+        </div>
+        <div class="field">
+          <label class="label">价格（元） *</label>
+          <input type="number" name="price" step="0.01" th:value="${route.price}" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">线路简介 *</label>
+        <textarea name="description" required th:text="${route.description}"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">保存修改</button>
+        <a class="btn ghost" th:href="@{/routes/manage}">返回</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>房间信息管理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>房间信息管理</h1>
+    <p>选择酒店，维护其房间实时预订信息</p>
+  </div>
+
+  <div class="card card-pad" style="margin-bottom:16px;">
+    <label class="label">星级酒店</label>
+    <div class="grid grid-3">
+      <a class="mgmt-card" th:each="h : ${starHotels}" th:href="@{'/hotel/' + ${h.id} + '/rooms'}">
+        <h3 th:text="${h.name}">酒店</h3>
+        <p>管理房间预订信息</p>
+      </a>
+    </div>
+    <div class="empty" th:if="${#lists.isEmpty(starHotels)}" style="border:none;background:none;padding:12px;">暂无星级酒店。</div>
+  </div>
+
+  <div class="card card-pad" style="margin-bottom:16px;">
+    <label class="label">非星级酒店</label>
+    <div class="grid grid-3">
+      <a class="mgmt-card" th:each="h : ${nonStarHotels}" th:href="@{'/hotel/' + ${h.id} + '/rooms'}">
+        <h3 th:text="${h.name}">酒店</h3>
+        <p>管理房间预订信息</p>
+      </a>
+    </div>
+    <div class="empty" th:if="${#lists.isEmpty(nonStarHotels)}" style="border:none;background:none;padding:12px;">无非星级酒店。</div>
+  </div>
+
+  <div class="card card-pad">
+    <label class="label">乡村旅游酒店</label>
+    <div class="grid grid-3">
+      <a class="mgmt-card" th:each="h : ${ruralHotels}" th:href="@{'/hotel/' + ${h.id} + '/rooms'}">
+        <h3 th:text="${h.name}">酒店</h3>
+        <p>管理房间预订信息</p>
+      </a>
+    </div>
+    <div class="empty" th:if="${#lists.isEmpty(ruralHotels)}" style="border:none;background:none;padding:12px;">暂无乡村酒店。</div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

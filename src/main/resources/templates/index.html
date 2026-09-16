@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" th:href="@{/}">游客服务系统</a>
+    <div class="top-actions">
+      <a class="btn ghost" th:href="@{/login}">登录</a>
+      <a class="btn" th:href="@{/register}">注册</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="page-head">
+    <h1>游客服务系统</h1>
+    <p>提供酒店预订、娱乐推荐、美食推荐、旅游交通车等信息的查询，并支持景区景点、线路推荐以及游客投诉管理。</p>
+  </div>
+
+  <div class="card card-pad">
+    <h3 style="margin-top:0;">系统功能</h3>
+    <ul style="margin:0;padding-left:24px;line-height:2;">
+      <li>游客投诉系统</li>
+      <li>旅游应急信息发布系统</li>
+      <li>星级酒店查询及营销系统</li>
+      <li>非星级酒店及乡村旅游酒店查询及营销系统</li>
+      <li>旅游景区（点）及旅游线路查询系统</li>
+      <li>餐饮娱乐及营业性演出团体信息查询系统</li>
+      <li>天气及路况查询系统</li>
+    </ul>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

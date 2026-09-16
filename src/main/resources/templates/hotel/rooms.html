@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>房间管理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${hotel.name} + ' · 房型管理'">房型管理</h1>
+    <p>录入并及时更新酒店房间实时预订信息</p>
+    <a class="btn" th:href="@{'/hotel/' + ${hotel.id} + '/room/new'}">+ 新增房型</a>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(rooms)}">
+    <table class="table">
+      <thead>
+        <tr><th>房型</th><th>价格</th><th>总房间</th><th>可订</th><th>更新时间</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="r : ${rooms}">
+          <td th:text="${r.roomType}">房型</td>
+          <td th:text="'¥' + ${r.price}">价格</td>
+          <td th:text="${r.totalRooms}">总数</td>
+          <td><span class="badge" th:classappend="${r.availableRooms > 0 ? 'green' : 'red'}" th:text="${r.availableRooms} + ' 间'">可订</span></td>
+          <td class="muted" th:text="${#temporals.format(r.updatedAt,'yyyy-MM-dd HH:mm')}">时间</td>
+          <td style="white-space:nowrap;">
+            <a class="btn ghost sm" th:href="@{'/room/' + ${r.id} + '/edit'}">编辑</a>
+            <form th:action="@{'/room/' + ${r.id} + '/delete'}" method="post" class="js-confirm" data-confirm="确认删除该房型吗？" style="display:inline-block;">
+              <button class="btn danger sm">删除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(rooms)}">暂无房型，点击右上角新增。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

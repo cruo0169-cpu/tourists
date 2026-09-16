@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>投诉处理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>我的投诉处理</h1>
+    <p>处理分派到我名下的游客投诉</p>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(complaints)}">
+    <table class="table">
+      <thead>
+        <tr><th>标题</th><th>游客</th><th>提交时间</th><th>状态</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="c : ${complaints}">
+          <td><a th:href="@{'/complaint/' + ${c.id}}" th:text="${c.title}">标题</a></td>
+          <td class="muted" th:text="${c.tourist.name} ?: ${c.tourist.username}">游客</td>
+          <td class="muted" th:text="${#temporals.format(c.createdAt,'yyyy-MM-dd HH:mm')}">时间</td>
+          <td th:replace="~{fragments/badges :: complaintStatus(${c})}"></td>
+          <td>
+            <a class="btn ghost sm" th:if="${c.status.name() == 'IN_HANDLING'}"
+               th:href="@{'/complaint/' + ${c.id} + '/handle'}">去处理</a>
+            <a class="btn ghost sm" th:if="${c.status.name() != 'IN_HANDLING'}"
+               th:href="@{'/complaint/' + ${c.id}}">查看</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(complaints)}">当前没有分派给您的投诉。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

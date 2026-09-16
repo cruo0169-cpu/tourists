@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>线路管理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>线路管理</h1>
+    <p>维护景区旅游线路信息</p>
+    <a class="btn" th:href="@{/routes/new}">+ 新增线路</a>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(routes)}">
+    <table class="table">
+      <thead>
+        <tr><th>线路名称</th><th>时长</th><th>价格</th><th>途径景点</th><th>简介</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="r : ${routes}">
+          <td th:text="${r.name}">名称</td>
+          <td class="muted" th:text="${r.duration}">时长</td>
+          <td class="muted" th:text="'¥' + ${r.price}">价格</td>
+          <td class="muted" th:text="${r.spots}">景点</td>
+          <td class="muted" th:text="${r.description}">简介</td>
+          <td style="white-space:nowrap;">
+            <a class="btn ghost sm" th:href="@{'/routes/' + ${r.id} + '/edit'}">编辑</a>
+            <form th:action="@{'/routes/' + ${r.id} + '/delete'}" method="post" class="js-confirm" data-confirm="确认删除该线路吗？" style="display:inline-block;">
+              <button class="btn danger sm">删除</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(routes)}">暂无线路，点击右上角新增。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

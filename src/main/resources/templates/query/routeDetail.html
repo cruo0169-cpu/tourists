@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${route.name}">线路详情 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1 th:text="${route.name}">线路</h1>
+    <a class="btn ghost" th:href="@{/routes}">返回线路</a>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card card-pad">
+      <div class="field" style="margin-top:0;">
+        <label class="label">线路简介</label>
+        <p style="margin:0;" th:text="${route.description}">简介</p>
+      </div>
+      <div class="field">
+        <label class="label">基本信息</label>
+        <p style="margin:0;" class="muted" th:text="'时长：' + ${route.duration}">时长</p>
+        <p style="margin:2px 0 0;" class="muted" th:text="'价格：¥' + ${route.price}">价格</p>
+      </div>
+    </div>
+
+    <div class="card card-pad">
+      <label class="label">途经景点</label>
+      <table class="table">
+        <thead>
+          <tr><th>景点</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="s : ${#strings.listSplit(route.spots, ',')}">
+            <td>
+              <span th:text="${s}">景点</span>
+              <a class="btn ghost sm" th:href="@{/spots}" style="margin-left:8px;">查看景点</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

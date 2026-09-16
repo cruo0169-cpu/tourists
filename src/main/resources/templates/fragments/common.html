@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="navbar" class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" th:href="@{/home}">游客服务系统</a>
+    <div class="top-actions">
+      <div class="user-chip" th:if="${user != null}">
+        <span th:text="${user.name} ?: ${user.username}">用户</span>
+        <span class="role-tag" th:text="${roleLabel}">角色</span>
+      </div>
+      <form th:action="@{/logout}" method="post">
+        <button class="btn ghost sm" type="submit">退出登录</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" th:fragment="nav" th:if="${user != null}">
+  <div class="nav-inner">
+    <a th:href="@{/home}">首页</a>
+
+    <th:block th:if="${user.role.name() == 'TOURIST'}">
+      <a th:href="@{/complaint/mine}">我的投诉</a>
+      <a th:href="@{/consultation}">游客咨询</a>
+      <a th:href="@{/booking}">我的入住</a>
+      <a th:href="@{/emergency}">应急信息</a>
+      <a th:href="@{/hotel/star}">星级酒店</a>
+      <a th:href="@{/hotel/non-star}">非星级酒店</a>
+      <a th:href="@{/hotel/rural}">乡村酒店</a>
+      <a th:href="@{/spots}">景区景点</a>
+      <a th:href="@{/routes}">旅游线路</a>
+      <a th:href="@{/catering}">餐饮娱乐</a>
+      <a th:href="@{/performance}">演出团体</a>
+      <a th:href="@{/transport}">旅游交通</a>
+      <a th:href="@{/weather}">天气预报</a>
+      <a th:href="@{/road}">路况信息</a>
+    </th:block>
+
+    <th:block th:if="${user.role.name() == 'PLATFORM_ADMIN'}">
+      <a th:href="@{/complaint/approval}">投诉审批</a>
+      <a th:href="@{/complaint/closing}">投诉结案</a>
+      <a th:href="@{/consultation/manage}">咨询处理</a>
+      <a th:href="@{/emergency/manage}">应急信息管理</a>
+      <a th:href="@{/hotel/marketing}">酒店营销</a>
+      <a th:href="@{/routes/manage}">线路管理</a>
+    </th:block>
+
+    <th:block th:if="${user.role.name() == 'APPROVER'}">
+      <a th:href="@{/emergency/approval}">应急信息审批</a>
+    </th:block>
+
+    <th:block th:if="${user.role.name() == 'COMPLAINT_HANDLER'}">
+      <a th:href="@{/complaint/handling}">投诉处理</a>
+    </th:block>
+
+    <th:block th:if="${user.role.name() == 'HOTEL_MANAGER'}">
+      <a th:href="@{/hotel/manager}">房间信息管理</a>
+      <a th:href="@{/booking/manage}">入住管理</a>
+    </th:block>
+  </div>
+</nav>
+
+<footer th:fragment="footer" class="container">
+  <div style="text-align:center;color:#9aa3ad;font-size:12px;">游客服务系统</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>咨询处理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>咨询处理</h1>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(items)}">
+    <table class="table">
+      <thead>
+        <tr><th>标题</th><th>游客</th><th>提问时间</th><th>状态</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="c : ${items}">
+          <td th:text="${c.title}">标题</td>
+          <td class="muted" th:text="${c.tourist.name} ?: ${c.tourist.username}">游客</td>
+          <td class="muted" th:text="${#temporals.format(c.createdAt,'yyyy-MM-dd HH:mm')}">时间</td>
+          <td>
+            <span class="badge" th:classappend="${c.status.name() == 'PENDING' ? 'amber' : 'green'}"
+                  th:text="${c.status.label}">状态</span>
+          </td>
+          <td>
+            <a class="btn sm" th:if="${c.status.name() == 'PENDING'}"
+               th:href="@{'/consultation/' + ${c.id} + '/reply'}">回复</a>
+            <a class="btn ghost sm" th:if="${c.status.name() != 'PENDING'}"
+               th:href="@{'/consultation/' + ${c.id} + '/reply'}">查看</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(items)}">暂无游客咨询。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

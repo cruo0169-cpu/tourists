@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>工作台 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>游客服务系统</h1>
+    <p>当前用户：<span th:text="${user.name} ?: ${user.username}">用户</span>（<span th:text="${roleLabel}">角色</span>）</p>
+  </div>
+
+  <div class="page-head">
+    <h1>功能导航</h1>
+  </div>
+
+  <div class="mgmt-menu" th:if="${user.role.name() == 'TOURIST'}">
+    <a class="mgmt-card" th:href="@{/complaint/new}"><h3>提交投诉</h3></a>
+    <a class="mgmt-card" th:href="@{/complaint/mine}"><h3>我的投诉</h3></a>
+    <a class="mgmt-card" th:href="@{/consultation}"><h3>游客咨询</h3></a>
+    <a class="mgmt-card" th:href="@{/booking}"><h3>我的入住</h3></a>
+    <a class="mgmt-card" th:href="@{/emergency}"><h3>应急信息</h3></a>
+    <a class="mgmt-card" th:href="@{/hotel/star}"><h3>星级酒店</h3></a>
+    <a class="mgmt-card" th:href="@{/spots}"><h3>景区景点</h3></a>
+    <a class="mgmt-card" th:href="@{/routes}"><h3>旅游线路</h3></a>
+    <a class="mgmt-card" th:href="@{/catering}"><h3>餐饮娱乐</h3></a>
+    <a class="mgmt-card" th:href="@{/performance}"><h3>演出团体</h3></a>
+    <a class="mgmt-card" th:href="@{/transport}"><h3>旅游交通</h3></a>
+    <a class="mgmt-card" th:href="@{/weather}"><h3>天气预报</h3></a>
+    <a class="mgmt-card" th:href="@{/road}"><h3>路况信息</h3></a>
+  </div>
+
+  <div class="mgmt-menu" th:if="${user.role.name() == 'PLATFORM_ADMIN'}">
+    <a class="mgmt-card" th:href="@{/complaint/approval}"><h3>投诉审批</h3></a>
+    <a class="mgmt-card" th:href="@{/complaint/closing}"><h3>投诉结案</h3></a>
+    <a class="mgmt-card" th:href="@{/consultation/manage}"><h3>咨询处理</h3></a>
+    <a class="mgmt-card" th:href="@{/emergency/manage}"><h3>应急信息管理</h3></a>
+    <a class="mgmt-card" th:href="@{/hotel/marketing}"><h3>酒店营销</h3></a>
+    <a class="mgmt-card" th:href="@{/routes/manage}"><h3>线路管理</h3></a>
+  </div>
+
+  <div class="mgmt-menu" th:if="${user.role.name() == 'APPROVER'}">
+    <a class="mgmt-card" th:href="@{/emergency/approval}"><h3>应急信息审批</h3></a>
+  </div>
+
+  <div class="mgmt-menu" th:if="${user.role.name() == 'COMPLAINT_HANDLER'}">
+    <a class="mgmt-card" th:href="@{/complaint/handling}"><h3>投诉处理</h3></a>
+  </div>
+
+  <div class="mgmt-menu" th:if="${user.role.name() == 'HOTEL_MANAGER'}">
+    <a class="mgmt-card" th:href="@{/hotel/manager}"><h3>房间信息管理</h3></a>
+    <a class="mgmt-card" th:href="@{/booking/manage}"><h3>入住管理</h3></a>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

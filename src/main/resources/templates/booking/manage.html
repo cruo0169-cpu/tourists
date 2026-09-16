@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>入住管理 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>入住管理</h1>
+    <p>确认或拒绝游客的入住预订</p>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(items)}">
+    <table class="table">
+      <thead>
+        <tr><th>酒店/房型</th><th>游客</th><th>入住/退房</th><th>状态</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="b : ${items}">
+          <td>
+            <span th:text="${b.room.hotel.name}">酒店</span>
+            <span class="muted" th:text="' · ' + ${b.room.roomType}">房型</span>
+          </td>
+          <td class="muted" th:text="${b.guestName} + ' / ' + ${b.phone}">游客</td>
+          <td class="muted">
+            <span th:text="${#temporals.format(b.checkIn,'yyyy/MM/dd')}"></span>~
+            <span th:text="${#temporals.format(b.checkOut,'yyyy/MM/dd')}"></span>
+          </td>
+          <td><span class="badge" th:classappend="${b.status.name() == 'PENDING'} ? 'amber' : (${b.status.name() == 'CONFIRMED'} ? 'green' : 'gray')"
+                th:text="${b.status.label}">状态</span></td>
+          <td>
+            <form th:if="${b.status.name() == 'PENDING'}" th:action="@{'/booking/' + ${b.id} + '/confirm'}" method="post"
+                  class="js-confirm" data-confirm="确认该入住预订吗？将扣减可订房间数。" style="display:inline-block;">
+              <button class="btn sm">确认</button>
+            </form>
+            <form th:if="${b.status.name() == 'PENDING'}" th:action="@{'/booking/' + ${b.id} + '/reject'}" method="post"
+                  class="js-confirm" data-confirm="拒绝该预订吗？" style="display:inline-block;">
+              <button class="btn danger sm">拒绝</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty" th:if="${#lists.isEmpty(items)}">暂无入住预订。</div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

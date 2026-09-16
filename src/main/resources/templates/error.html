@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>出错了 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container" style="max-width:520px;margin-top:80px;">
+  <div class="card card-pad" style="text-align:center;">
+    <h1 style="margin:0 0 8px;">页面出错了</h1>
+    <p class="muted" th:text="${status} != null ? ('错误码：' + ${status}) : '请求处理失败，请稍后重试。'">错误信息</p>
+    <div class="actions" style="justify-content:center;">
+      <a class="btn" th:href="@{/home}">返回工作台</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

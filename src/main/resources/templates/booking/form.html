@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>选择入住 · 游客服务系统</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header th:replace="~{fragments/common :: navbar}"></header>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+
+<div class="container">
+  <div class="page-head">
+    <h1>选择入住</h1>
+    <p th:text="${room.hotel.name} + ' · ' + ${room.roomType}">酒店/房型</p>
+  </div>
+
+  <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+  <div class="card card-pad" style="max-width:640px;">
+    <div class="alert info" style="font-size:14px;">
+      价格：<span th:text="'¥' + ${room.price}"></span>
+      · 可订：<span th:text="${room.availableRooms} + ' 间'">可订</span>
+    </div>
+    <form th:action="@{'/room/' + ${room.id} + '/booking/new'}" method="post">
+      <div class="field">
+        <label class="label">入住人 *</label>
+        <input type="text" name="guestName" th:value="${guestName}" required placeholder="入住人姓名">
+      </div>
+      <div class="field">
+        <label class="label">联系电话 *</label>
+        <input type="text" name="phone" th:value="${phone}" required placeholder="联系电话">
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="label">入住日期 *</label>
+          <input type="date" name="checkIn" th:value="${checkIn}" required>
+          <div class='muted' style='font-size:12px;'>格式：年/月/日</div>
+        </div>
+        <div class="field">
+          <label class="label">退房日期 *</label>
+          <input type="date" name="checkOut" th:value="${checkOut}" required>
+          <div class='muted' style='font-size:12px;'>格式：年/月/日</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit">提交入住</button>
+        <a class="btn ghost" th:href="@{'/hotel/' + ${room.hotel.id}}">返回</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/common :: footer}"></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
